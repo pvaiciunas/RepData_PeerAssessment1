@@ -4,18 +4,20 @@ output:
   html_document:
     keep_md: true
 ---
-
+```{r}
 echo = TRUE
 
 library(lattice)
 library(plyr)
-
+```
 
 ## Loading and preprocessing the data
+```{r}
 data <- read.csv("activity.csv")
-
+```
 
 ## What is mean total number of steps taken per day?
+```{r}
 totalSteps <- ddply(data, "date", summarize, numSteps = sum(steps))
 hist(totalSteps$numSteps
      , main = "Total Steps"
@@ -26,10 +28,11 @@ medianSteps <- median(totalSteps$numSteps, na.rm = TRUE)
 
 meanSteps
 medianSteps
-
+```
 
 
 ## What is the average daily activity pattern?
+```{r}
 dailyPattern <- ddply(data, "interval", summarize, avgSteps = mean(steps, na.rm = TRUE))
 plot(dailyPattern$avgSteps
      , type = "l"
@@ -42,10 +45,11 @@ axis(1, 1:nrow(dailyPattern),dailyPattern$interval)
 
 maxInterval <- dailyPattern[dailyPattern$inerval == max(dailyPattern$interval),]
 maxInterval
-
+```
 
 
 ## Imputing missing values
+```{r}
 numNA <- sum(is.na(data$steps))
 numNA
 noNAData <- data
@@ -60,10 +64,11 @@ noNAMean <- mean(noNAData$steps)
 noNAMedian <- median(noNAData$steps)
 noNAMean
 noNAMedian
-
+```
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
+```{r}
 data$date <- as.POSIXlt(data$date, format = "%Y-%m-%d")
 data$day <- weekdays(data$date)
 data$typeDay <- ifelse(data$day == "Saturday" | data$day == "Sunday"
@@ -84,3 +89,4 @@ xyplot(mean ~ interval | typeDay
        , layout = c(1, 2)
        , xlab = "Interval"
        , ylab = "Number of steps")
+```
